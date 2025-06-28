@@ -23,7 +23,7 @@ CHATBOT/
 - bot.py # Streamlit chatbot interface
 - memory.py # CSV embedding + FAISS vector store builder
 - rag_resource.py # Loads retriever & handles query matching
-- - data/
+- data/
   - serv.csv # Customer support Q&A knowledge base
   - service.pdf # (optional, unused in current version)
 - vectorstore/ # Auto-generated FAISS index
