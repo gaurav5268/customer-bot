@@ -30,15 +30,15 @@ def get_embedding_model():
         embedding_model = HuggingFaceEmbeddings(
             model_name="sentence-transformers/all-MiniLM-L6-v2"
         )
-        print("✅ Embedding model loaded.")
+        print("Embedding model loaded.")
         return embedding_model
     except Exception as e:
-        print(f"❌ Failed to load embedding model: {e}")
+        print(f"Failed to load embedding model: {e}")
         return None
 
 def build_and_save_faiss_index(answer_chunks, embedding_model, index_path=VECTOR_STORE_PATH):
     try:
-        print("🔄 Building FAISS vector store...")
+        print("Building FAISS vector store...")
         documents = [Document(page_content=chunk, metadata={"source": "csv"}) for chunk in answer_chunks]
 
         db = FAISS.from_documents(documents, embedding_model)
