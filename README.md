@@ -13,7 +13,6 @@ A fully functional AI-powered chatbot that provides:
 📝 Allows users to register and track complaints  
 📄 Uses a lightweight Q&A CSV file as the data source  
 🧠 Retrieval with HuggingFace sentence transformers + FAISS  
-📦 Self-contained: No external APIs or LLMs required  
 💬 Built with an intuitive Streamlit interface  
 
 ---
