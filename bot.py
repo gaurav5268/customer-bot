@@ -7,9 +7,9 @@ from flask import Flask, request, jsonify
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import streamlit as st
-from rag_resource import get_similar_answer  # This should return top answer string from retriever
+from rag_resource import get_similar_answer
 
-# ========== FLASK BACKEND API SETUP ========== #
+
 app = Flask(__name__)
 client = MongoClient("mongodb://localhost:27017")
 collection = client["complaintDB"]["complaints"]
@@ -45,8 +45,6 @@ def get_complaint_api(complaint_id):
 def run_flask_api():
     app.run(debug=False, use_reloader=False)
 
-
-# ========== UTILITY FUNCTIONS ========== #
 def create_complaint(payload):
     try:
         res = requests.post("http://127.0.0.1:5000/complaints", json=payload)
@@ -55,7 +53,6 @@ def create_complaint(payload):
         return str(e)
 
 def fetch_complaint_by_id(text):
-    # Look for a 24-character MongoDB ObjectId in the text
     match = re.search(r'\b([a-fA-F0-9]{24})\b', text)
     if match:
         complaint_id = match.group(1)
@@ -72,7 +69,7 @@ def is_complaint_query(text):
     return any(k in text.lower() for k in keywords)
 
 
-# ========== STREAMLIT UI ========== #
+#STREAMLIT UI 
 def launch_streamlit_ui():
     st.set_page_config(page_title="Customer Support Chatbot", page_icon="🤖")
     st.title("🤖 Customer Support Chatbot")
@@ -86,30 +83,30 @@ def launch_streamlit_ui():
         st.chat_message("user").write(user_input)
         session = st.session_state.session
 
-        # Check if input contains complaint ID
+
         complaint_data = fetch_complaint_by_id(user_input)
         if complaint_data:
             formatted = "\n".join([f"**{k.capitalize()}**: {v}" for k, v in complaint_data.items()])
-            st.chat_message("bot").markdown(f"📄 Complaint Details:\n\n{formatted}")
+            st.chat_message("bot").markdown(f" Complaint Details:\n\n{formatted}")
             return
 
-        # Complaint registration flow
+
         if session.get("step") == "details":
             session["details"] = user_input
             session["step"] = "name"
-            st.chat_message("bot").write("🧑 Your name?")
+            st.chat_message("bot").write("Your name?")
             return
 
         if session.get("step") == "name":
             session["name"] = user_input
             session["step"] = "phone"
-            st.chat_message("bot").write("📞 Your phone number?")
+            st.chat_message("bot").write("Your phone number?")
             return
 
         if session.get("step") == "phone":
             session["phone_number"] = user_input
             session["step"] = "email"
-            st.chat_message("bot").write("📧 Your email?")
+            st.chat_message("bot").write("Your email?")
             return
 
         if session.get("step") == "email":
@@ -121,26 +118,24 @@ def launch_streamlit_ui():
                 "complaint_details": session["details"]
             }
             cid = create_complaint(payload)
-            st.chat_message("bot").write(f"✅ Complaint registered! Complaint ID: {cid}")
+            st.chat_message("bot").write(f"Complaint registered! Complaint ID: {cid}")
             st.session_state.session = {}  # reset
             return
 
         if is_complaint_query(user_input):
             session["step"] = "details"
-            st.chat_message("bot").write("📝 Please describe your issue.")
+            st.chat_message("bot").write("Please describe your issue.")
             return
 
-        # Otherwise: get RAG answer
+
         response = get_similar_answer(user_input)
         if not response or "sorry" in response.lower():
             session["step"] = "details"
             session["details"] = user_input
-            st.chat_message("bot").write("🤖 I couldn’t help with that. Let’s file a complaint. Describe your issue.")
+            st.chat_message("bot").write("I couldn’t help with that. Let’s file a complaint. Describe your issue.")
         else:
             st.chat_message("bot").write(response)
 
-
-# ========== MAIN ENTRY ========== #
 if __name__ == "__main__":
     threading.Thread(target=run_flask_api, daemon=True).start()
     time.sleep(1.5)  # Give Flask a second to boot
