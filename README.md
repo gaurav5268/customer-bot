@@ -60,7 +60,7 @@ Note : Only the **answers** are embedded to improve semantic search relevance in
 
 ---
 
-## ⚙️ How It Works
+##  How It Works
 
 - `memory.py`  
   - Reads Q&A pairs from `serv.csv`, extracts answers, generates embeddings using `MiniLM`, and stores them in FAISS.
@@ -125,6 +125,7 @@ requests
 langchain  
 sentence-transformers  
 faiss-cpu
+
 Generate the requirements file using:
 
 pip freeze > requirements.txt
