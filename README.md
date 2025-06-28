@@ -48,15 +48,15 @@ CHATBOT/
 ## Dataset Format (serv.csv)
 
 You define your support knowledge as:
-Q: What is your return policy?
-A: We accept returns within 30 days of delivery...
+- Q: What is your return policy?
+- A: We accept returns within 30 days of delivery...
 
-Q: how to track my order?
-A: You can track using the link sent to your email...
+- Q: how to track my order?
+- A: You can track using the link sent to your email...
 
 
 
-Only the **answers** are embedded to improve semantic search relevance in the RAG pipeline.
+Note : Only the **answers** are embedded to improve semantic search relevance in the RAG pipeline.
 
 ---
 
@@ -101,6 +101,20 @@ Step 5: Start the Chatbot Interface
 python bot.py
 
 This will launch the chatbot interface in your browser using Streamlit.
+
+---
+
+# Chatbot interface
+
+ Streamlit chatbot interface is used to run the bot.
+ ![image](https://github.com/user-attachments/assets/8745ab1d-cf2b-4503-958d-9f96bbe095ca)
+
+
+## How data is stored
+
+The complaints are stored in the connected MongoDB server/database which is connected like below and can be retrieve when needed.
+![image](https://github.com/user-attachments/assets/cd41e964-15e1-462d-9f00-dfdf7f803d4a)
+
 
 ## Required Python Packages
 
